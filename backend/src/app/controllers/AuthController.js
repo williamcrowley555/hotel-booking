@@ -1,13 +1,24 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const validator = require('validator');
 
 class AuthController {
     // [POST] /v1/auth/register
     async registerUser(req, res, next) {
-        const newUser = await new User(req.body);
-        const savedUser = await newUser.save();
+        const { email, phone } = req.body;
+
+        // Check if user with provided email or phone already exists
+        const existingEmailUser = await User.findOne({ email });
+        const existingPhoneUser = await User.findOne({ phone });
+
+        if (existingEmailUser) {
+            return res.status(400).send({ message: 'User with provided email already exists' });
+        }
+
+        if (existingPhoneUser) {
+            return res.status(400).send({ message: 'User with provided phone already exists' });
+        }
+
+        const savedUser = await new User(req.body).save();
 
         return res.status(201).send(savedUser);
     }

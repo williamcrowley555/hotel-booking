@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const Schema = mongoose.Schema;
 
+const validGenders = ['male', 'female'];
 const allowedRoles = ['admin', 'manager', 'user'];
 
 const UserSchema = new Schema(
@@ -43,6 +44,17 @@ const UserSchema = new Schema(
             required: true,
             min: 6,
             trim: true,
+        },
+        gender: {
+            type: String,
+            required: true,
+            default: 'male',
+            validate: {
+                validator: function (value) {
+                    return validGenders.includes(value);
+                },
+                message: 'Invalid gender',
+            },
         },
         dateOfBirth: {
             type: Date,
