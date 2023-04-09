@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const Schema = mongoose.Schema;
 
@@ -69,6 +70,8 @@ RefundStatusSchema.methods.toJSON = function () {
     const refundStatusObject = refundStatus.toObject();
     return refundStatusObject;
 };
+
+RefundStatusSchema.plugin(mongoosePaginate);
 
 const RefundStatus = mongoose.model('RefundStatus', RefundStatusSchema);
 
