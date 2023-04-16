@@ -23,7 +23,7 @@ class UserController {
             page: req.query.page || 1,
             limit: req.query.limit || 10,
             sort,
-            collation: { locale: 'en', strength: 2 }, // Case-insensitive sorting
+            collation: { locale: 'vi', strength: 2 }, // Case-insensitive sorting
         };
 
         const { docs, totalDocs, totalPages, limit, page, hasPrevPage, hasNextPage, prevPage, nextPage } =
