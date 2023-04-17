@@ -133,10 +133,13 @@ class StatusController {
             }
             
             Status.restore({_id: req.params.id})
-                .then(() => {
-                    res.status(200).json({ message: "Status restored successfully"});
-                })
-                .catch(next);
+            .then(() => {
+                return Status.findOneAndUpdate({_id: req.params.id}, {deletedAt: null}, {new: true});
+            })
+            .then((restoredStatus) => {
+                res.status(200).json({ message: "Status restored successfully", status: restoredStatus });
+            })
+            .catch(next);
         })
         .catch(next);
     }
