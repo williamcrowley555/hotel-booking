@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const mongooseDelete = require('mongoose-delete');
+
 
 const Schema = mongoose.Schema;
 
@@ -12,7 +14,7 @@ const StatusSchema = new Schema(
             trim: true,
         },
         icon: {
-            type: Buffer,
+            type: String
         },
         color: {
             type: String,
@@ -66,7 +68,7 @@ const StatusSchema = new Schema(
             default: false,
         },
     },
-    {
+    {   
         timestamps: true,
     },
 );
@@ -88,6 +90,11 @@ StatusSchema.methods.toJSON = function () {
     const statusObject = status.toObject();
     return statusObject;
 };
+
+StatusSchema.plugin(mongooseDelete, {
+    deletedAt: true, 
+    overrideMethods: 'all', 
+});
 
 StatusSchema.plugin(mongoosePaginate);
 
