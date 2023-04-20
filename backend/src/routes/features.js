@@ -15,6 +15,7 @@ router.post(
     uploadImage.single('logo'),
     featureController.create,
 );
+router.patch('/:id/restore', jwtMiddleware.verifyManagerToken.bind(jwtMiddleware), featureController.restore);
 router.patch(
     '/:id',
     jwtMiddleware.verifyManagerToken.bind(jwtMiddleware),

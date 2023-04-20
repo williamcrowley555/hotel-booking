@@ -137,11 +137,25 @@ class FeatureController {
         return res.status(201).send(updatedFeature);
     }
 
+    // [PATCH] /features/:id/restore
+    async restore(req, res, next) {
+        const feature = await Feature.findOneDeleted({ _id: req.params.id });
+        if (!feature) {
+            return res.status(404).send({ message: 'Feature not found' });
+        }
+
+        const restoredFeature = await feature.restore({ _id: req.params.id });
+        if (!restoredFeature) {
+            return res.status(500).send({ message: 'Restore feature failed' });
+        }
+        return res.status(200).send(restoredFeature);
+    }
+
     // [DELETE] /v1/features/:id
     async delete(req, res, next) {
         const feature = await Feature.findOne({ _id: req.params.id });
         if (!feature) {
-            return res.status(404).send({ error: 'Feature not found' });
+            return res.status(404).send({ message: 'Feature not found' });
         }
 
         await feature.delete();
