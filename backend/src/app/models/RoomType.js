@@ -84,33 +84,6 @@ ImageSchema.pre('save', function (next) {
     });
 });
 
-const RoomSchema = new Schema(
-    {
-        roomNo: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        floor: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        status: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        extraInfo: {
-            type: String,
-            trim: true,
-        },
-    },
-    {
-        timestamps: true,
-    },
-);
-
 const RoomTypeSchema = new Schema(
     {
         name: {
@@ -154,12 +127,17 @@ const RoomTypeSchema = new Schema(
         },
         features: [
             {
-                type: mongoose.SchemaType.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'Feature',
             },
         ],
         rooms: {
-            type: [RoomSchema],
+            type: [
+                {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Room',
+                },
+            ],
         },
         adultsOccupancy: {
             type: Number,

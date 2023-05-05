@@ -55,7 +55,7 @@ class FeatureController {
 
     // [POST] /v1/features
     async create(req, res, next) {
-        // Find a feature with a case-insensitive name
+        // Find existing feature with a case-insensitive name
         const existingFeature = await Feature.findOne({ name: new RegExp(req.body.name, 'i') });
         if (existingFeature) {
             return res.status(400).send({ message: 'Feature already exists' });
@@ -65,10 +65,6 @@ class FeatureController {
         // Check if a file was uploaded
         if (!file) {
             return res.status(400).send({ message: 'No file uploaded' });
-        }
-
-        if (!isImage(file)) {
-            return res.status(400).send({ message: 'Invalid file format. Only images are allowed' });
         }
 
         const logoUrl = await uploadFileToStorage(bucket, imageFolder, file);

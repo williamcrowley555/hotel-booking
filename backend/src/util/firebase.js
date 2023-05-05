@@ -9,6 +9,7 @@ module.exports = {
                 metadata: {
                     contentType: file.mimetype,
                 },
+                predefinedAcl: 'publicRead', // Make the file publicly accessible
             });
 
             fileStream.on('error', (err) => {
