@@ -26,19 +26,12 @@ class UserController {
             collation: { locale: 'vi', strength: 2 }, // Case-insensitive sorting
         };
 
-        const { docs, totalDocs, totalPages, limit, page, hasPrevPage, hasNextPage, prevPage, nextPage } =
-            await User.paginate(filter, options);
+        const { docs, totalDocs, ...pagination } = await User.paginate(filter, options);
 
         return res.status(200).send({
             users: docs,
             totalUsers: totalDocs,
-            totalPages,
-            limit,
-            currentPage: page,
-            hasPrevPage,
-            hasNextPage,
-            prevPage,
-            nextPage,
+            ...pagination,
         });
     }
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const mongooseDelete = require('mongoose-delete');
+const validator = require('validator');
 
 const Schema = mongoose.Schema;
 
@@ -27,8 +28,29 @@ const RoomSchema = new Schema(
         roomType: {
             type: Schema.Types.ObjectId,
             ref: 'RoomType',
-            required: true,
         },
+        disableDates: [
+            {
+                dateFrom: {
+                    type: Date,
+                    required: true,
+                },
+                dateTo: {
+                    type: Date,
+                    required: true,
+                    validate: {
+                        validator: function (value) {
+                            return validator.isAfter(value, this.disableDates.dateFrom);
+                        },
+                        message: 'Date To must be after Date From',
+                    },
+                },
+                reason: {
+                    type: String,
+                    trim: true,
+                },
+            },
+        ],
     },
     {
         timestamps: true,

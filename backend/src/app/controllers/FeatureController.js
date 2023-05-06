@@ -27,19 +27,12 @@ class FeatureController {
             collation: { locale: 'vi', strength: 2 }, // Case-insensitive sorting
         };
 
-        const { docs, totalDocs, totalPages, limit, page, hasPrevPage, hasNextPage, prevPage, nextPage } =
-            await Feature.paginate({}, options);
+        const { docs, totalDocs, ...pagination } = await Feature.paginate({}, options);
 
         return res.status(200).send({
             features: docs,
             totalFeatures: totalDocs,
-            totalPages,
-            limit,
-            currentPage: page,
-            hasPrevPage,
-            hasNextPage,
-            prevPage,
-            nextPage,
+            ...pagination,
         });
     }
 
@@ -138,6 +131,12 @@ class FeatureController {
         const feature = await Feature.findOneDeleted({ _id: req.params.id });
         if (!feature) {
             return res.status(404).send({ message: 'Feature not found' });
+        }
+
+        // Find existing feature that is not deleted with a case-insensitive name
+        const existingFeature = await Feature.findOne({ name: new RegExp(feature.name, 'i') });
+        if (existingFeature) {
+            return res.status(400).send({ message: 'Feature already exists' });
         }
 
         const restoredFeature = await feature.restore({ _id: req.params.id });
